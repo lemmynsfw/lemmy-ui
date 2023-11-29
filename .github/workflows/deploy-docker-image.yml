@@ -34,6 +34,3 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ env.LOCAL_ORG }}/${{ env.LOCAL_REPO }}:${{ github.ref_name }}
-          file: docker/Dockerfile
-          build-args: |
-            RUST_RELEASE_MODE=release
