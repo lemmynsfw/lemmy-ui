@@ -142,7 +142,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     removeData: false,
     showConfirmTransferSite: false,
     showConfirmTransferCommunity: false,
-    imageExpanded: false,
+    imageExpanded: true,
     viewSource: false,
     showAdvanced: false,
     showMoreMobile: false,
