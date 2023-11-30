@@ -69,6 +69,24 @@ export async function createSsrHtml(
     <head>
     <script nonce="${cspNonce}">window.isoData = ${serialize(isoData)}</script>
   
+    <!-- Ask for adult consent -->
+    ${
+      site?.my_user
+        ? "<!-- User is logged in, dont ask -->"
+        : `
+        <script nonce="${cspNonce}">
+        if (localStorage.getItem('adult-consent') !== 'true') {
+          if (confirm('This website contains age-restricted materials including nudity and explicit depictions of sexual activity.\n\nBy entering, you affirm that you are at least 18 years of age or the age of majority in the jurisdiction you are accessing the website from and you consent to viewing sexually explicit content.\n\nI took the text from Youporn lol')) {
+            localStorage.setItem('adult-consent', 'true')
+          } else {
+            alert("Alright, sending you back 👍")
+            history.back()
+          }
+        }
+        </script>
+      `
+    }
+  
     <!-- A remote debugging utility for mobile -->
     ${erudaStr}
   
