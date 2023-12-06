@@ -142,7 +142,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     removeData: false,
     showConfirmTransferSite: false,
     showConfirmTransferCommunity: false,
-    imageExpanded: false,
+    imageExpanded: true,
     viewSource: false,
     showAdvanced: false,
     showMoreMobile: false,
@@ -626,7 +626,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             voteContentType={VoteContentType.Post}
             id={this.postView.post.id}
             onVote={this.props.onPostVote}
-            enableDownvotes={this.props.enableDownvotes}
+            enableDownvotes={
+              this.props.enableDownvotes &&
+              (!this.postView.community.local ||
+                this.postView.subscribed !== "NotSubscribed")
+            }
             counts={this.postView.counts}
             my_vote={this.postView.my_vote}
           />
@@ -1375,7 +1379,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
                   voteContentType={VoteContentType.Post}
                   id={this.postView.post.id}
                   onVote={this.props.onPostVote}
-                  enableDownvotes={this.props.enableDownvotes}
+                  enableDownvotes={
+                    this.props.enableDownvotes &&
+                    (!this.postView.community.local ||
+                      this.postView.subscribed !== "NotSubscribed")
+                  }
                   counts={this.postView.counts}
                   my_vote={this.postView.my_vote}
                 />
