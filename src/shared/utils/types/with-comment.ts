@@ -5,8 +5,4 @@ export default interface WithComment {
   counts: CommentAggregates;
   my_vote?: number;
   saved: boolean;
-  creator_is_moderator: boolean;
-  creator_is_admin: boolean;
-  creator_blocked: boolean;
-  creator_banned_from_community: boolean;
 }

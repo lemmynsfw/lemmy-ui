@@ -23,7 +23,6 @@ import validInstanceTLD from "./valid-instance-tld";
 import validTitle from "./valid-title";
 import validURL from "./valid-url";
 import dedupByProperty from "./dedup-by-property";
-import getApubName from "./apub-name";
 
 export {
   capitalizeFirstLetter,
@@ -51,5 +50,4 @@ export {
   validTitle,
   validURL,
   dedupByProperty,
-  getApubName,
 };

@@ -897,13 +897,11 @@ export class Profile extends Component<
   async handlePostVote(form: CreatePostLike) {
     const voteRes = await HttpService.client.likePost(form);
     this.findAndUpdatePost(voteRes);
-    return voteRes;
   }
 
   async handlePostEdit(form: EditPost) {
     const res = await HttpService.client.editPost(form);
     this.findAndUpdatePost(res);
-    return res;
   }
 
   async handleCommentReport(form: CreateCommentReport) {

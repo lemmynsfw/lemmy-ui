@@ -222,7 +222,7 @@ export class PostForm extends Component<PostFormProps, PostFormState> {
   state: PostFormState = {
     suggestedPostsRes: EMPTY_REQUEST,
     metadataRes: EMPTY_REQUEST,
-    form: {},
+    form: { nsfw: true },
     loading: false,
     imageLoading: false,
     imageDeleteUrl: "",
@@ -444,23 +444,23 @@ export class PostForm extends Component<PostFormProps, PostFormState> {
                 siteLanguages={this.props.siteLanguages}
                 viewOnly
                 // All of these are unused, since its view only
-                onPostEdit={async () => EMPTY_REQUEST}
-                onPostVote={async () => EMPTY_REQUEST}
-                onPostReport={async () => {}}
-                onBlockPerson={async () => {}}
-                onLockPost={async () => {}}
-                onDeletePost={async () => {}}
-                onRemovePost={async () => {}}
-                onSavePost={async () => {}}
-                onFeaturePost={async () => {}}
-                onPurgePerson={async () => {}}
-                onPurgePost={async () => {}}
-                onBanPersonFromCommunity={async () => {}}
-                onBanPerson={async () => {}}
-                onAddModToCommunity={async () => {}}
-                onAddAdmin={async () => {}}
-                onTransferCommunity={async () => {}}
-                onMarkPostAsRead={async () => {}}
+                onPostEdit={() => {}}
+                onPostVote={() => {}}
+                onPostReport={() => {}}
+                onBlockPerson={() => {}}
+                onLockPost={() => {}}
+                onDeletePost={() => {}}
+                onRemovePost={() => {}}
+                onSavePost={() => {}}
+                onFeaturePost={() => {}}
+                onPurgePerson={() => {}}
+                onPurgePost={() => {}}
+                onBanPersonFromCommunity={() => {}}
+                onBanPerson={() => {}}
+                onAddModToCommunity={() => {}}
+                onAddAdmin={() => {}}
+                onTransferCommunity={() => {}}
+                onMarkPostAsRead={() => {}}
               />
             </>
           )}
@@ -615,23 +615,23 @@ export class PostForm extends Component<PostFormProps, PostFormState> {
                 siteLanguages={this.props.siteLanguages}
                 viewOnly
                 // All of these are unused, since its view only
-                onPostEdit={async () => EMPTY_REQUEST}
-                onPostVote={async () => EMPTY_REQUEST}
-                onPostReport={async () => {}}
-                onBlockPerson={async () => {}}
-                onLockPost={async () => {}}
-                onDeletePost={async () => {}}
-                onRemovePost={async () => {}}
-                onSavePost={async () => {}}
-                onFeaturePost={async () => {}}
-                onPurgePerson={async () => {}}
-                onPurgePost={async () => {}}
-                onBanPersonFromCommunity={async () => {}}
-                onBanPerson={async () => {}}
-                onAddModToCommunity={async () => {}}
-                onAddAdmin={async () => {}}
-                onTransferCommunity={async () => {}}
-                onMarkPostAsRead={async () => {}}
+                onPostEdit={() => {}}
+                onPostVote={() => {}}
+                onPostReport={() => {}}
+                onBlockPerson={() => {}}
+                onLockPost={() => {}}
+                onDeletePost={() => {}}
+                onRemovePost={() => {}}
+                onSavePost={() => {}}
+                onFeaturePost={() => {}}
+                onPurgePerson={() => {}}
+                onPurgePost={() => {}}
+                onBanPersonFromCommunity={() => {}}
+                onBanPerson={() => {}}
+                onAddModToCommunity={() => {}}
+                onAddAdmin={() => {}}
+                onTransferCommunity={() => {}}
+                onMarkPostAsRead={() => {}}
               />
             </>
           )

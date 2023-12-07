@@ -14,7 +14,7 @@ import { Icon, Spinner } from "../common/icon";
 import { MomentTime } from "../common/moment-time";
 import { PersonListing } from "../person/person-listing";
 import { PrivateMessageForm } from "./private-message-form";
-import ModActionFormModal from "../common/mod-action-form-modal";
+import ReportForm from "../common/report-form";
 
 interface PrivateMessageState {
   showReply: boolean;
@@ -53,7 +53,6 @@ export class PrivateMessage extends Component<
     super(props, context);
     this.handleReplyCancel = this.handleReplyCancel.bind(this);
     this.handleReportSubmit = this.handleReportSubmit.bind(this);
-    this.hideReportDialog = this.hideReportDialog.bind(this);
   }
 
   get mine(): boolean {
@@ -248,12 +247,9 @@ export class PrivateMessage extends Component<
             </div>
           )}
         </div>
-        <ModActionFormModal
-          onSubmit={this.handleReportSubmit}
-          modActionType="report-message"
-          onCancel={this.hideReportDialog}
-          show={this.state.showReportDialog}
-        />
+        {this.state.showReportDialog && (
+          <ReportForm onSubmit={this.handleReportSubmit} />
+        )}
         {this.state.showReply && (
           <div className="row">
             <div className="col-sm-6">
@@ -331,21 +327,17 @@ export class PrivateMessage extends Component<
   }
 
   handleShowReportDialog(i: PrivateMessage) {
-    i.setState({ showReportDialog: true });
+    i.setState({ showReportDialog: !i.state.showReportDialog });
   }
 
-  hideReportDialog() {
-    this.setState({
-      showReportDialog: false,
-    });
-  }
-
-  async handleReportSubmit(reason: string) {
+  handleReportSubmit(reason: string) {
     this.props.onReport({
       private_message_id: this.props.private_message_view.private_message.id,
       reason,
     });
 
-    this.hideReportDialog();
+    this.setState({
+      showReportDialog: false,
+    });
   }
 }
