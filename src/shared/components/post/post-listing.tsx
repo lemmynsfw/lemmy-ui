@@ -96,7 +96,7 @@ interface PostListingProps {
 export class PostListing extends Component<PostListingProps, PostListingState> {
   state: PostListingState = {
     showEdit: false,
-    imageExpanded: false,
+    imageExpanded: true,
     viewSource: false,
     showAdvanced: false,
     showBody: false,
@@ -578,7 +578,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             voteContentType={VoteContentType.Post}
             id={id}
             onVote={onPostVote}
-            enableDownvotes={enableDownvotes}
+            enableDownvotes={
+              enableDownvotes &&
+              (!this.postView.community.local ||
+                this.postView.subscribed !== "NotSubscribed")
+            }
             counts={counts}
             my_vote={my_vote}
           />
@@ -733,7 +737,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
                   voteContentType={VoteContentType.Post}
                   id={this.postView.post.id}
                   onVote={this.props.onPostVote}
-                  enableDownvotes={this.props.enableDownvotes}
+                  enableDownvotes={
+                    this.props.enableDownvotes &&
+                    (!this.postView.community.local ||
+                      this.postView.subscribed !== "NotSubscribed")
+                  }
                   counts={this.postView.counts}
                   my_vote={this.postView.my_vote}
                 />
