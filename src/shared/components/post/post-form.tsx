@@ -222,7 +222,7 @@ export class PostForm extends Component<PostFormProps, PostFormState> {
   state: PostFormState = {
     suggestedPostsRes: EMPTY_REQUEST,
     metadataRes: EMPTY_REQUEST,
-    form: {},
+    form: { nsfw: true },
     loading: false,
     imageLoading: false,
     imageDeleteUrl: "",
