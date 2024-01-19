@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter, formatPastDate } from "@utils/helpers";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
+import parseISO from "date-fns/parseISO";
 import { Component } from "inferno";
 import { I18NextService } from "../../services";
 import { Icon } from "./icon";

@@ -1,4 +1,6 @@
-import { parseISO, getYear, getDayOfYear } from "date-fns";
+import getDayOfYear from "date-fns/getDayOfYear";
+import getYear from "date-fns/getYear";
+import parseISO from "date-fns/parseISO";
 
 export default function isCakeDay(published: string): boolean {
   const createDate = parseISO(published);

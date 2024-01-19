@@ -1,4 +1,4 @@
-import { setDefaultOptions } from "date-fns";
+import setDefaultOptions from "date-fns/setDefaultOptions";
 import { I18NextService } from "../../services";
 
 const EN_US = "en-US";
@@ -25,9 +25,9 @@ export default async function () {
     locale = (
       await import(
         /* webpackExclude: /\.js\.flow$/ */
-        `date-fns/locale`
+        `date-fns/locale/${lang}`
       )
-    )[lang];
+    ).default;
   } catch (e) {
     console.log(
       `Could not load locale ${lang} from date-fns, falling back to ${EN_US}`,
@@ -35,9 +35,9 @@ export default async function () {
     locale = (
       await import(
         /* webpackExclude: /\.js\.flow$/ */
-        `date-fns/locale`
+        `date-fns/locale/${EN_US}`
       )
-    )[EN_US];
+    ).default;
   }
   setDefaultOptions({
     locale,
