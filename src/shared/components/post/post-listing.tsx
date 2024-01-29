@@ -231,7 +231,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
       );
     }
 
-    // if embedded video link if not a video
+    // if embedded video link is not a video
     if (url && post.embed_video_url) {
       return (
         <div className="ratio ratio-16x9">
