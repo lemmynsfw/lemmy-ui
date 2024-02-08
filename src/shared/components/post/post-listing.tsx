@@ -52,6 +52,8 @@ import { RequestState } from "../../services/HttpService";
 import { Plyr } from "../../../shared/plyr";
 import Hls from "hls.js";
 
+const MEDIA_PROXY = process.env.LEMMY_UI_MEDIA_PROXY;
+
 type PostListingState = {
   showEdit: boolean;
   imageExpanded: boolean;
@@ -235,6 +237,15 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             {urlIsVideo && <source src={url} type={`video/mp4`} />}
             {embedIsVideo && (
               <source src={embed_video_url} type={`video/mp4`} />
+            )}
+            {urlIsVideo && MEDIA_PROXY && (
+              <source src={`${MEDIA_PROXY}${url}`} type={`video/mp4`} />
+            )}
+            {embedIsVideo && MEDIA_PROXY && (
+              <source
+                src={`${MEDIA_PROXY}${embed_video_url}`}
+                type={`video/mp4`}
+              />
             )}
           </video>
         </div>
