@@ -36,8 +36,8 @@ export class PictrsImage extends Component<PictrsImageProps, any> {
 
     return (
       <picture>
-        <source srcSet={this.src("webp")} type="image/webp" />
         <source srcSet={src} />
+        <source srcSet={this.src("webp")} type="image/webp" />
         <source srcSet={this.src("jpg")} type="image/jpeg" />
         <img
           src={src}
