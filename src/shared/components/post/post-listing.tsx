@@ -208,10 +208,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     }
 
     const { post } = this.postView;
-    const { url } = post;
-
+    const { url, embed_video_url } = post;
+    const urlIsVideo = url && isVideo(url);
+    const embedIsVideo = embed_video_url && isVideo(embed_video_url);
     // if direct video link
-    if (url && isVideo(url)) {
+    if (url && (urlIsVideo || embedIsVideo)) {
       return (
         <div className="embed-responsive ratio ratio-16x9 mt-3">
           <video
@@ -221,13 +222,16 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             controls
             className="embed-responsive-item col-12"
           >
-            <source src={url} type="video/mp4" />
+            {urlIsVideo && <source src={url} type={`video/mp4`} />}
+            {embedIsVideo && (
+              <source src={embed_video_url} type={`video/mp4`} />
+            )}
           </video>
         </div>
       );
     }
 
-    // if embedded video link
+    // if embedded video link is not a video
     if (url && post.embed_video_url) {
       return (
         <div className="ratio ratio-16x9">
