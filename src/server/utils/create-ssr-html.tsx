@@ -86,7 +86,6 @@ export async function createSsrHtml(
   
     <!-- Ask for adult consent -->
     ${adultConsent}
-  
     <!-- A remote debugging utility for mobile -->
     ${erudaStr}
   
