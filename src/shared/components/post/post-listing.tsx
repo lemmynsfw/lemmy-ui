@@ -49,7 +49,7 @@ import { BanUpdateForm } from "../common/mod-action-form-modal";
 import PostActionDropdown from "../common/content-actions/post-action-dropdown";
 import { CrossPostParams } from "@utils/types";
 import { RequestState } from "../../services/HttpService";
-import Plyr from "plyr";
+import { Plyr } from "../../../shared/plyr";
 import Hls from "hls.js";
 
 type PostListingState = {
@@ -812,9 +812,11 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
       });
     }
     // attach plyr skin to the video
-    new Plyr(video, {
-      loop: { active: true },
-    });
+    if (Plyr) {
+      new Plyr(video, {
+        loop: { active: true },
+      });
+    }
     const volume = localStorage.getItem("video_volume_level");
     const muted = localStorage.getItem("video_muted");
     video.volume = Number(volume || 0);
