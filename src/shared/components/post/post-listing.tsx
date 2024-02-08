@@ -52,7 +52,7 @@ import { RequestState } from "../../services/HttpService";
 import { Plyr } from "../../../shared/plyr";
 import Hls from "hls.js";
 
-const MEDIA_PROXY = process.env.LEMMY_UI_MEDIA_PROXY;
+const MEDIA_PROXY = "https://media.lemmynsfw.com/?";
 
 type PostListingState = {
   showEdit: boolean;
