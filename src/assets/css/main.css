@@ -451,3 +451,7 @@ br.big {
 .totp-link {
   width: fit-content;
 }
+
+:root {
+  --plyr-color-main: var(--bs-primary);
+}

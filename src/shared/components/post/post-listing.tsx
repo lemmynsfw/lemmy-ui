@@ -49,6 +49,7 @@ import { BanUpdateForm } from "../common/mod-action-form-modal";
 import PostActionDropdown from "../common/content-actions/post-action-dropdown";
 import { CrossPostParams } from "@utils/types";
 import { RequestState } from "../../services/HttpService";
+import Plyr from "plyr";
 
 type PostListingState = {
   showEdit: boolean;
@@ -778,6 +779,22 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
   handleVideoLoadStart(_i: PostListing, e: Event) {
     const video = e.target as HTMLVideoElement;
+    new Plyr(video, {
+      controls: [
+        "play-large", // The large play button in the center
+        "play", // Play/pause playback
+        "progress", // The progress bar and scrubber for playback and buffering
+        "current-time", // The current time of playback
+        "duration", // The full duration of the media
+        "mute", // Toggle mute
+        "volume", // Volume control
+        "settings", // Settings menu
+        "pip", // Picture-in-picture (currently Safari only)
+        "airplay", // Airplay (currently Safari only)
+        "download", // Show a download button with a link to either the current source or a custom URL you specify in your options
+        "fullscreen", // Toggle fullscreen
+      ],
+    });
     const volume = localStorage.getItem("video_volume_level");
     const muted = localStorage.getItem("video_muted");
     video.volume = Number(volume || 0);
