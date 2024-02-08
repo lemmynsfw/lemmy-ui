@@ -584,11 +584,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             voteContentType={VoteContentType.Post}
             id={id}
             onVote={onPostVote}
-            enableDownvotes={
-              enableDownvotes &&
-              (!this.postView.community.local ||
-                this.postView.subscribed !== "NotSubscribed")
-            }
+            enableDownvotes={enableDownvotes}
             counts={counts}
             my_vote={my_vote}
           />
@@ -743,11 +739,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
                   voteContentType={VoteContentType.Post}
                   id={this.postView.post.id}
                   onVote={this.props.onPostVote}
-                  enableDownvotes={
-                    this.props.enableDownvotes &&
-                    (!this.postView.community.local ||
-                      this.postView.subscribed !== "NotSubscribed")
-                  }
+                  enableDownvotes={this.props.enableDownvotes}
                   counts={this.postView.counts}
                   my_vote={this.postView.my_vote}
                 />
