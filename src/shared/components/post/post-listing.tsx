@@ -780,6 +780,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   handleVideoLoadStart(_i: PostListing, e: Event) {
     const video = e.target as HTMLVideoElement;
     new Plyr(video, {
+      loop: { active: true },
       controls: [
         "play-large", // The large play button in the center
         "play", // Play/pause playback
