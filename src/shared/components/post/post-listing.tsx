@@ -50,6 +50,7 @@ import PostActionDropdown from "../common/content-actions/post-action-dropdown";
 import { CrossPostParams } from "@utils/types";
 import { RequestState } from "../../services/HttpService";
 import Plyr from "plyr";
+import Hls from "hls.js";
 
 type PostListingState = {
   showEdit: boolean;
@@ -214,6 +215,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     const embedIsVideo = embed_video_url && isVideo(embed_video_url);
     // if direct video link
     if (url && (urlIsVideo || embedIsVideo)) {
+      const redgifsId = /redgifs\.com\/watch\/([a-z]+)\/?/i.exec(url)?.[1];
       return (
         <div className="embed-responsive ratio ratio-16x9 mt-3">
           <video
@@ -221,8 +223,15 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             onPlay={linkEvent(this, this.handleVideoLoadStart)}
             onVolumeChange={linkEvent(this, this.handleVideoVolumeChange)}
             controls
+            crossOrigin="anonymous"
+            playsInline
             className="embed-responsive-item col-12"
           >
+            {redgifsId && (
+              <source
+                src={`https://api.redgifs.com/v2/gifs/${redgifsId}/hd.m3u8`}
+              />
+            )}
             {urlIsVideo && <source src={url} type={`video/mp4`} />}
             {embedIsVideo && (
               <source src={embed_video_url} type={`video/mp4`} />
@@ -779,22 +788,32 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
   handleVideoLoadStart(_i: PostListing, e: Event) {
     const video = e.target as HTMLVideoElement;
+    const sources = Array.from(video.getElementsByTagName("source"));
+    const firstSource = sources?.[0];
+    // attach hls.js to the video if it's a m3u8 file
+    if (
+      Hls.isSupported() &&
+      !video.getAttribute("data-hls-setup") &&
+      firstSource.src.endsWith(".m3u8")
+    ) {
+      video.setAttribute("data-hls-setup", "true");
+      var hls = new Hls();
+      hls.loadSource(firstSource.src);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.ERROR, function () {
+        hls.detachMedia();
+        hls.destroy();
+        // the library is removing the sources
+        // we need to re-add them to be able to fallback
+        sources.slice(1).forEach(source => {
+          video.appendChild(source);
+        });
+        video.load();
+      });
+    }
+    // attach plyr skin to the video
     new Plyr(video, {
       loop: { active: true },
-      controls: [
-        "play-large", // The large play button in the center
-        "play", // Play/pause playback
-        "progress", // The progress bar and scrubber for playback and buffering
-        "current-time", // The current time of playback
-        "duration", // The full duration of the media
-        "mute", // Toggle mute
-        "volume", // Volume control
-        "settings", // Settings menu
-        "pip", // Picture-in-picture (currently Safari only)
-        "airplay", // Airplay (currently Safari only)
-        "download", // Show a download button with a link to either the current source or a custom URL you specify in your options
-        "fullscreen", // Toggle fullscreen
-      ],
     });
     const volume = localStorage.getItem("video_volume_level");
     const muted = localStorage.getItem("video_muted");
