@@ -52,8 +52,6 @@ import { RequestState } from "../../services/HttpService";
 import { Plyr } from "../../../shared/plyr";
 import Hls from "hls.js";
 
-const MEDIA_PROXY = "https://media.lemmynsfw.com/?";
-
 type PostListingState = {
   showEdit: boolean;
   imageExpanded: boolean;
@@ -225,27 +223,19 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             onPlay={linkEvent(this, this.handleVideoLoadStart)}
             onVolumeChange={linkEvent(this, this.handleVideoVolumeChange)}
             controls
+            preload="none"
             crossOrigin="anonymous"
             playsInline
             className="embed-responsive-item col-12"
           >
             {redgifsId && (
               <source
-                src={`https://api.redgifs.com/v2/gifs/${redgifsId}/hd.m3u8`}
+                src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.m3u8`}
               />
             )}
             {urlIsVideo && <source src={url} type={`video/mp4`} />}
             {embedIsVideo && (
               <source src={embed_video_url} type={`video/mp4`} />
-            )}
-            {urlIsVideo && MEDIA_PROXY && (
-              <source src={`${MEDIA_PROXY}${url}`} type={`video/mp4`} />
-            )}
-            {embedIsVideo && MEDIA_PROXY && (
-              <source
-                src={`${MEDIA_PROXY}${embed_video_url}`}
-                type={`video/mp4`}
-              />
             )}
           </video>
         </div>
