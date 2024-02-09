@@ -229,9 +229,14 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             className="embed-responsive-item col-12"
           >
             {redgifsId && (
-              <source
-                src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.m3u8`}
-              />
+              <>
+                <source
+                  src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.m3u8`}
+                />
+                <source
+                  src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.mp4`}
+                />
+              </>
             )}
             {urlIsVideo && <source src={url} type={`video/mp4`} />}
             {embedIsVideo && (
