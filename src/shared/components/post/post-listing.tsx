@@ -49,8 +49,6 @@ import { BanUpdateForm } from "../common/mod-action-form-modal";
 import PostActionDropdown from "../common/content-actions/post-action-dropdown";
 import { CrossPostParams } from "@utils/types";
 import { RequestState } from "../../services/HttpService";
-import { Plyr } from "../../../shared/plyr";
-import Hls from "hls.js";
 
 type PostListingState = {
   showEdit: boolean;
@@ -210,12 +208,9 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     }
 
     const { post } = this.postView;
-    const { url, embed_video_url } = post;
-    const urlIsVideo = url && isVideo(url);
-    const embedIsVideo = embed_video_url && isVideo(embed_video_url);
+    const { url } = post;
     // if direct video link
-    if (url && (urlIsVideo || embedIsVideo)) {
-      const redgifsId = /redgifs\.com\/watch\/([a-z]+)\/?/i.exec(url)?.[1];
+    if (url && isVideo(url)) {
       return (
         <div className="embed-responsive ratio ratio-16x9 mt-3">
           <video
@@ -223,31 +218,15 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             onPlay={linkEvent(this, this.handleVideoLoadStart)}
             onVolumeChange={linkEvent(this, this.handleVideoVolumeChange)}
             controls
-            preload="none"
-            crossOrigin="anonymous"
-            playsInline
             className="embed-responsive-item col-12"
           >
-            {redgifsId && (
-              <>
-                <source
-                  src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.m3u8`}
-                />
-                <source
-                  src={`https://media.lemmynsfw.com/redgifs/${redgifsId}.mp4`}
-                />
-              </>
-            )}
-            {urlIsVideo && <source src={url} type={`video/mp4`} />}
-            {embedIsVideo && (
-              <source src={embed_video_url} type={`video/mp4`} />
-            )}
+            <source src={url} type="video/mp4" />
           </video>
         </div>
       );
     }
 
-    // if embedded video link is not a video
+    // if embedded video link
     if (url && post.embed_video_url) {
       return (
         <div className="ratio ratio-16x9">
@@ -794,35 +773,6 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
   handleVideoLoadStart(_i: PostListing, e: Event) {
     const video = e.target as HTMLVideoElement;
-    const sources = Array.from(video.getElementsByTagName("source"));
-    const firstSource = sources?.[0];
-    // attach hls.js to the video if it's a m3u8 file
-    if (
-      Hls.isSupported() &&
-      !video.getAttribute("data-hls-setup") &&
-      firstSource.src.endsWith(".m3u8")
-    ) {
-      video.setAttribute("data-hls-setup", "true");
-      var hls = new Hls();
-      hls.loadSource(firstSource.src);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.ERROR, function () {
-        hls.detachMedia();
-        hls.destroy();
-        // the library is removing the sources
-        // we need to re-add them to be able to fallback
-        sources.slice(1).forEach(source => {
-          video.appendChild(source);
-        });
-        video.load();
-      });
-    }
-    // attach plyr skin to the video
-    if (Plyr) {
-      new Plyr(video, {
-        loop: { active: true },
-      });
-    }
     const volume = localStorage.getItem("video_volume_level");
     const muted = localStorage.getItem("video_muted");
     video.volume = Number(volume || 0);
