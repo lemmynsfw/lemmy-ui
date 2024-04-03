@@ -262,13 +262,13 @@ hr {
   -ms-filter: blur(10px);
 }
 
-.img-blur-icon {
+/* .img-blur-icon {
   filter: blur(3px);
   -webkit-filter: blur(3px);
   -moz-filter: blur(3px);
   -o-filter: blur(3px);
   -ms-filter: blur(3px);
-}
+} */
 
 .img-cover {
   object-fit: cover;
