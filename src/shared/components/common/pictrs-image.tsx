@@ -26,7 +26,7 @@ export class PictrsImage extends Component<PictrsImageProps, any> {
   render() {
     const { src, icon, iconOverlay, banner, thumbnail, nsfw, pushup, cardTop } =
       this.props;
-    let user_blur_nsfw = true;
+    let user_blur_nsfw = false;
     if (UserService.Instance.myUserInfo) {
       user_blur_nsfw =
         UserService.Instance.myUserInfo?.local_user_view.local_user.blur_nsfw;
@@ -36,8 +36,8 @@ export class PictrsImage extends Component<PictrsImageProps, any> {
 
     return (
       <picture>
-        <source srcSet={this.src("webp")} type="image/webp" />
         <source srcSet={src} />
+        <source srcSet={this.src("webp")} type="image/webp" />
         <source srcSet={this.src("jpg")} type="image/jpeg" />
         <img
           src={src}

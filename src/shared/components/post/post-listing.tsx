@@ -96,7 +96,7 @@ interface PostListingProps {
 export class PostListing extends Component<PostListingProps, PostListingState> {
   state: PostListingState = {
     showEdit: false,
-    imageExpanded: false,
+    imageExpanded: true,
     viewSource: false,
     showAdvanced: false,
     showBody: false,
@@ -278,6 +278,12 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     const url = post.url;
     const thumbnail = post.thumbnail_url;
 
+    const redgifsId = /redgifs\.com\/watch\/(?<id>[\w]+)/.exec(post.url ?? "")
+      ?.groups?.id;
+    const videoThumbnail = redgifsId
+      ? `https://media.lemmynsfw.com/redgifs/${redgifsId}.jpg`
+      : null;
+
     if (!this.props.hideImage && url && isImage(url) && this.imageSrc) {
       return (
         <button
@@ -314,7 +320,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
       if ((!this.props.hideImage && isVideo(url)) || post.embed_video_url) {
         return (
           <a
-            className="text-body"
+            className="text-body thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0 bg-transparent"
             href={url}
             title={url}
             rel={relTags}
@@ -323,9 +329,24 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             aria-label={I18NextService.i18n.t("expand_here")}
             target={this.linkTarget}
           >
-            <div className="thumbnail rounded bg-light d-flex justify-content-center">
-              <Icon icon="play" classes="d-flex align-items-center" />
-            </div>
+            {videoThumbnail ? (
+              <>
+                <PictrsImage
+                  src={videoThumbnail}
+                  thumbnail
+                  alt=""
+                  nsfw={post.nsfw || this.postView.community.nsfw}
+                />
+                <Icon
+                  icon="play"
+                  classes="d-block text-white position-absolute end-0 top-0 mini-overlay text-opacity-75 text-opacity-100-hover"
+                />
+              </>
+            ) : (
+              <div className="thumbnail rounded bg-light d-flex justify-content-center">
+                <Icon icon="play" classes="d-flex align-items-center" />
+              </div>
+            )}
           </a>
         );
       } else {
