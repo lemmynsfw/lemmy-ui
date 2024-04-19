@@ -94,13 +94,14 @@ export async function createSsrHtml(
     <html ${helmet.htmlAttributes.toString()}>
     <head>
     <script nonce="${cspNonce}">
+    window.isoData = ${serialize(isoData)};
+
     if (!document.documentElement.hasAttribute("data-bs-theme")) {
       const light = window.matchMedia("(prefers-color-scheme: light)").matches;
       document.documentElement.setAttribute("data-bs-theme", light ? "light" : "dark");
     }
     </script>
     ${lazyScripts}
-    <script nonce="${cspNonce}">window.isoData = ${serialize(isoData)}</script>
   
     <!-- Ask for adult consent -->
     ${adultConsent}
@@ -114,6 +115,16 @@ export async function createSsrHtml(
     ${helmet.title.toString()}
     ${helmet.meta.toString()}
   
+    <style>
+    #app[data-adult-consent] {
+      filter: blur(10px);
+      -webkit-filter: blur(10px);
+      -moz-filter: blur(10px);
+      -o-filter: blur(10px);
+      -ms-filter: blur(10px);
+    }
+    </style>
+
     <!-- Required meta tags -->
     <meta name="Description" content="Lemmy">
     <meta charset="utf-8">
