@@ -2,7 +2,7 @@ name: Sync repo with upstream
 
 on:
   schedule:
-    - cron: "*/60 * * * *" # every hour
+    - cron: "0 10 * * *" # every day at 10
   workflow_dispatch: # on button click
 
 env:
