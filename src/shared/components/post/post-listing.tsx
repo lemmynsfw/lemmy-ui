@@ -298,12 +298,6 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     const url = post.url;
     const thumbnail = post.thumbnail_url;
 
-    const redgifsId = /redgifs\.com\/watch\/(?<id>[\w]+)/.exec(post.url ?? "")
-      ?.groups?.id;
-    const videoThumbnail = redgifsId
-      ? `https://media.lemmynsfw.com/redgifs/${redgifsId}.jpg`
-      : null;
-
     if (!this.props.hideImage && url && isImage(url) && this.imageSrc) {
       return (
         <button
