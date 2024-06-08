@@ -80,10 +80,6 @@ function fetchCommunitiesForOptions(client: WrappedLemmyHttp) {
   return client.listCommunities({ limit: 30, sort: "TopMonth", type_: "All" });
 }
 
-function stringAsQueryParam(param?: string) {
-  return (param?.length ?? 0) > 0 ? param : undefined;
-}
-
 interface CreatePostState {
   siteRes: GetSiteResponse;
   loading: boolean;
@@ -127,7 +123,6 @@ export class CreatePost extends Component<
     this.handleNsfwChange = this.handleNsfwChange.bind(this);
     this.handleThumbnailUrlBlur = this.handleThumbnailUrlBlur.bind(this);
     this.handleAltTextBlur = this.handleAltTextBlur.bind(this);
-    this.handleCopySuggestedTitle = this.handleCopySuggestedTitle.bind(this);
 
     // Only fetch the data if coming from another routeupdate
     if (FirstLoadService.isFirstLoad) {
@@ -258,7 +253,6 @@ export class CreatePost extends Component<
               onUrlBlur={this.handleUrlBlur}
               onThumbnailUrlBlur={this.handleThumbnailUrlBlur}
               onNsfwChange={this.handleNsfwChange}
-              onCopySuggestedTitle={this.handleCopySuggestedTitle}
             />
           </div>
         </div>
@@ -282,14 +276,14 @@ export class CreatePost extends Component<
     };
 
     const createPostQueryParams: QueryParams<CreatePostProps> = {
-      body: stringAsQueryParam(body),
+      body,
       communityId: communityId?.toString(),
-      customThumbnailUrl: stringAsQueryParam(customThumbnailUrl),
+      customThumbnailUrl,
       languageId: languageId?.toString(),
-      title: stringAsQueryParam(title),
+      title,
       nsfw,
-      url: stringAsQueryParam(url),
-      altText: stringAsQueryParam(altText),
+      url,
+      altText,
     };
 
     this.props.history.replace({
@@ -332,10 +326,6 @@ export class CreatePost extends Component<
 
   handleAltTextBlur(altText: string) {
     this.updateUrl({ altText });
-  }
-
-  handleCopySuggestedTitle(url: string, title: string) {
-    this.updateUrl({ url, title });
   }
 
   async handlePostCreate(form: CreatePostI, bypassNavWarning: () => void) {
