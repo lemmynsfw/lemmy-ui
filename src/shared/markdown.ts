@@ -1,5 +1,4 @@
 import { communitySearch, personSearch } from "@utils/app";
-import { isBrowser } from "@utils/browser";
 import { debounce, groupBy } from "@utils/helpers";
 import { CommunityTribute, PersonTribute } from "@utils/types";
 import { Picker } from "emoji-mart";
@@ -18,6 +17,7 @@ import markdown_it_highlightjs from "markdown-it-highlightjs/core";
 import { Renderer, Token } from "markdown-it";
 import { instanceLinkRegex, relTags } from "./config";
 import { lazyHighlightjs } from "./lazy-highlightjs";
+import { isBrowser } from "@utils/browser";
 
 export let Tribute: any;
 
@@ -41,7 +41,7 @@ export let customEmojisLookup: Map<string, CustomEmojiView> = new Map<
 >();
 
 if (isBrowser()) {
-  Tribute = require("tributejs");
+  Tribute = await import("tributejs");
 }
 
 export function mdToHtml(text: string, rerender: () => void) {
