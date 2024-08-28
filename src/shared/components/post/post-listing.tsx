@@ -187,7 +187,6 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
             {this.showBody && post.url && post.embed_title && (
               <MetadataCard post={post} />
             )}
-            {this.showBody && this.videoBlock}
             {this.showBody && this.body()}
           </>
         ) : (
@@ -239,44 +238,29 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
       </div>
     );
   }
+  get img() {
+    const { post } = this.postView;
+    const { url } = post;
 
-  get videoBlock() {
-    const post = this.postView.post;
-    const url = post.url;
+    if (this.isoData.showAdultConsentModal) {
+      return <></>;
+    }
 
     // if direct video link or embedded video link
-    if (url && isVideo(url)) {
+    if (url && (isVideo(url) || post.embed_video_url)) {
       return (
-        <div className="ratio ratio-16x9 mt-3">
+        <div className="embed-responsive ratio ratio-16x9 mt-3">
           <video
             onLoadStart={linkEvent(this, this.handleVideoLoadStart)}
             onPlay={linkEvent(this, this.handleVideoLoadStart)}
             onVolumeChange={linkEvent(this, this.handleVideoVolumeChange)}
             controls
+            className="embed-responsive-item col-12"
           >
             <source src={post.embed_video_url ?? url} type="video/mp4" />
           </video>
         </div>
       );
-    } else if (post.embed_video_url) {
-      return (
-        <div className="ratio ratio-16x9 mt-3">
-          <iframe
-            title="video embed"
-            src={post.embed_video_url}
-            sandbox="allow-same-origin allow-scripts"
-            allowFullScreen={true}
-          ></iframe>
-        </div>
-      );
-    }
-  }
-
-  get img() {
-    const { post } = this.postView;
-
-    if (this.isoData.showAdultConsentModal) {
-      return <></>;
     }
 
     if (this.imageSrc) {
