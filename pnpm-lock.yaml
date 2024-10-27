@@ -141,8 +141,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       markdown-it-ruby:
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^1.0.0
+        version: 1.1.0
       markdown-it-sub:
         specifier: ^2.0.0
         version: 2.0.0
@@ -154,7 +154,7 @@ importers:
         version: 2.9.1(webpack@5.95.0)
       qreator:
         specifier: ^9.3.0
-        version: 9.6.0(react@18.3.1)
+        version: 9.7.0(react@18.3.1)
       register-service-worker:
         specifier: ^1.7.2
         version: 1.7.2
@@ -3168,8 +3168,8 @@ packages:
   markdown-it-html5-embed@1.0.0:
     resolution: {integrity: sha512-SPgugO/1+/9sZcgxoxijoTHSUpCUgFCNe1MSuTmDxDkV6NQrVzMclhRMFgE/rcHO+2rhIg3U7Oy80XA/E8ytpg==}
 
-  markdown-it-ruby@0.1.1:
-    resolution: {integrity: sha512-ct8t/Drt7scv20VdaQtOhpBOC2SDICaW8E/WQS8kY2eUdu0eoDwW8ugXcCy8Vku4Y5CuA5qrewlHpwaFsJxbpQ==}
+  markdown-it-ruby@1.1.0:
+    resolution: {integrity: sha512-Qy61wmnw4Rna5chHiwftcMgt1Gh5QFe/bnT621dJ1oG4i62Eux3iXYxh1DoRp53cp4g/OdqFx3lx4dDFm2YPOg==}
 
   markdown-it-sub@2.0.0:
     resolution: {integrity: sha512-iCBKgwCkfQBRg2vApy9vx1C1Tu6D8XYo8NvevI3OlwzBRmiMtsJ2sXupBgEA7PPxiDwNni3qIUkhZ6j5wofDUA==}
@@ -3753,8 +3753,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qreator@9.6.0:
-    resolution: {integrity: sha512-wmzGkIiWBV9NFIw8r/Zmw111PQyneV3uqwpw1zPWdX8hiimwoF9maZ8GvcIqk5eo9C3aiiuWN4+0z5SQkwaXCA==}
+  qreator@9.7.0:
+    resolution: {integrity: sha512-yon0h4oNDa0oU62pkd1xisbLc3UZVlV+E2iRRU02KiB/0MR4SvH3v9YpwSa365O0mkjjOdZHPuR5Q9z+bWRjIw==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -7845,7 +7845,7 @@ snapshots:
       markdown-it: 8.4.2
       mimoza: 1.0.0
 
-  markdown-it-ruby@0.1.1: {}
+  markdown-it-ruby@1.1.0: {}
 
   markdown-it-sub@2.0.0: {}
 
@@ -8245,7 +8245,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qreator@9.6.0(react@18.3.1):
+  qreator@9.7.0(react@18.3.1):
     dependencies:
       '@types/react-dom': 18.3.1
       color-string: 1.9.1
