@@ -273,22 +273,18 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   }
 
   get img() {
+    const { post } = this.postView;
+
     if (this.isoData.showAdultConsentModal) {
       return <></>;
     }
 
-    // Use the full-size image for expands
-    const post = this.postView.post;
-    const url = post.url;
-    const thumbnail = post.thumbnail_url;
-    const imageSrc = url && isImage(url) ? url : thumbnail;
-
-    if (imageSrc) {
+    if (this.imageSrc) {
       return (
         <>
           <div className="offset-sm-3 my-2 d-none d-sm-block">
-            <a href={imageSrc} className="d-inline-block">
-              <PictrsImage src={imageSrc} alt={post.alt_text} />
+            <a href={this.imageSrc} className="d-inline-block">
+              <PictrsImage src={this.imageSrc} alt={post.alt_text} />
             </a>
           </div>
           <div className="my-2 d-block d-sm-none">
@@ -297,7 +293,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
               className="p-0 border-0 bg-transparent d-inline-block"
               onClick={linkEvent(this, this.handleImageExpandClick)}
             >
-              <PictrsImage src={imageSrc} alt={post.alt_text} />
+              <PictrsImage src={this.imageSrc} alt={post.alt_text} />
             </button>
           </div>
         </>
@@ -319,12 +315,26 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     );
   }
 
+  get imageSrc(): string | undefined {
+    const post = this.postView.post;
+    const url = post.url;
+    const thumbnail = post.thumbnail_url;
+
+    if (thumbnail) {
+      return thumbnail;
+    } else if (url && isImage(url)) {
+      return url;
+    } else {
+      return undefined;
+    }
+  }
+
   thumbnail() {
     const post = this.postView.post;
     const url = post.url;
     const thumbnail = post.thumbnail_url;
 
-    if (!this.props.hideImage && url && isImage(url) && thumbnail) {
+    if (!this.props.hideImage && url && isImage(url) && this.imageSrc) {
       return (
         <button
           type="button"
@@ -333,14 +343,20 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
           onClick={linkEvent(this, this.handleImageExpandClick)}
           aria-label={I18NextService.i18n.t("expand_here")}
         >
-          {this.imgThumb(thumbnail)}
+          {this.imgThumb(this.imageSrc)}
           <Icon
             icon="image"
             classes="d-block text-white position-absolute end-0 top-0 mini-overlay text-opacity-75 text-opacity-100-hover"
           />
         </button>
       );
-    } else if (!this.props.hideImage && url && thumbnail && !isVideo(url)) {
+    } else if (
+      !this.props.hideImage &&
+      url &&
+      thumbnail &&
+      this.imageSrc &&
+      !isVideo(url)
+    ) {
       return (
         <a
           className="thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0"
@@ -349,7 +365,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
           title={url}
           target={this.linkTarget}
         >
-          {this.imgThumb(thumbnail)}
+          {this.imgThumb(this.imageSrc)}
           <Icon
             icon="external-link"
             classes="d-block text-white position-absolute end-0 top-0 mini-overlay text-opacity-75 text-opacity-100-hover"
