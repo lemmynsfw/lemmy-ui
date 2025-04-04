@@ -4,7 +4,7 @@ import {
   PrivateMessageReportView,
   ResolvePrivateMessageReport,
 } from "lemmy-js-client";
-import { mdToHtmlNoImages } from "../../markdown";
+import { mdToHtml } from "../../markdown";
 import { I18NextService } from "../../services";
 import { Icon, Spinner } from "../common/icon";
 import { PersonListing } from "../person/person-listing";
@@ -54,9 +54,8 @@ export class PrivateMessageReport extends Component<Props, State> {
           {I18NextService.i18n.t("message")}:
           <div
             className="md-div"
-            dangerouslySetInnerHTML={mdToHtmlNoImages(
-              pmr.original_pm_text,
-              () => this.forceUpdate(),
+            dangerouslySetInnerHTML={mdToHtml(pmr.original_pm_text, () =>
+              this.forceUpdate(),
             )}
           />
         </div>
