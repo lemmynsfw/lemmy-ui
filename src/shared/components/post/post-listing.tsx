@@ -35,7 +35,7 @@ import {
   TransferCommunity,
 } from "lemmy-js-client";
 import { relTags, torrentHelpUrl } from "../../config";
-import { IsoDataOptionalSite, VoteContentType } from "../../interfaces";
+import { IsoData, VoteContentType } from "../../interfaces";
 import { mdToHtml, mdToHtmlInline } from "../../markdown";
 import { I18NextService, UserService } from "../../services";
 import { tippyMixin } from "../mixins/tippy-mixin";
@@ -106,7 +106,7 @@ interface PostListingProps {
 
 @tippyMixin
 export class PostListing extends Component<PostListingProps, PostListingState> {
-  private readonly isoData: IsoDataOptionalSite = setIsoData(this.context);
+  private readonly isoData: IsoData = setIsoData(this.context);
   state: PostListingState = {
     showEdit: false,
     imageExpanded: false,
@@ -144,12 +144,10 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   unlisten = () => {};
 
   componentWillMount(): void {
-    if (
-      UserService.Instance.myUserInfo &&
-      !this.isoData.showAdultConsentModal
-    ) {
+    if (!this.isoData.showAdultConsentModal) {
       const blur_nsfw =
-        UserService.Instance.myUserInfo.local_user_view.local_user.blur_nsfw;
+        UserService.Instance.myUserInfo?.local_user_view.local_user.blur_nsfw ??
+        !!this.isoData.site_res.site_view.site.content_warning;
       this.setState({
         imageExpanded: !(blur_nsfw && this.postView.post.nsfw),
       });
