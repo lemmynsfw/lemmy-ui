@@ -1,7 +1,7 @@
 import { myAuth, setIsoData } from "@utils/app";
 import { canShare, share } from "@utils/browser";
 import { getExternalHost, getHttpBase } from "@utils/env";
-import { futureDaysToUnixTime, hostname } from "@utils/helpers";
+import { formatPastDate, futureDaysToUnixTime, hostname } from "@utils/helpers";
 import { isImage, isVideo } from "@utils/media";
 import { canAdmin, canMod } from "@utils/roles";
 import classNames from "classnames";
@@ -35,7 +35,7 @@ import {
   TransferCommunity,
 } from "lemmy-js-client";
 import { relTags, torrentHelpUrl } from "../../config";
-import { IsoDataOptionalSite, VoteContentType } from "../../interfaces";
+import { IsoData, VoteContentType } from "../../interfaces";
 import { mdToHtml, mdToHtmlInline } from "../../markdown";
 import { I18NextService, UserService } from "../../services";
 import { tippyMixin } from "../mixins/tippy-mixin";
@@ -106,7 +106,7 @@ interface PostListingProps {
 
 @tippyMixin
 export class PostListing extends Component<PostListingProps, PostListingState> {
-  private readonly isoData: IsoDataOptionalSite = setIsoData(this.context);
+  private readonly isoData: IsoData = setIsoData(this.context);
   state: PostListingState = {
     showEdit: false,
     imageExpanded: false,
@@ -144,14 +144,12 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   unlisten = () => {};
 
   componentWillMount(): void {
-    if (
-      UserService.Instance.myUserInfo &&
-      !this.isoData.showAdultConsentModal
-    ) {
-      const { auto_expand, blur_nsfw } =
-        UserService.Instance.myUserInfo.local_user_view.local_user;
+    if (!this.isoData.showAdultConsentModal) {
+      const blur_nsfw =
+        UserService.Instance.myUserInfo?.local_user_view.local_user.blur_nsfw ??
+        !!this.isoData.site_res.site_view.site.content_warning;
       this.setState({
-        imageExpanded: auto_expand && !(blur_nsfw && this.postView.post.nsfw),
+        imageExpanded: !(blur_nsfw && this.postView.post.nsfw),
       });
     }
 
@@ -246,7 +244,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
     const url = post.url;
 
     // if direct video link or embedded video link
-    if (url && isVideo(url)) {
+    if ((url && isVideo(url)) || isVideo(post.embed_video_url ?? "")) {
       return (
         <div className="ratio ratio-16x9 mt-3">
           <video
@@ -418,7 +416,6 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
   createdLine() {
     const pv = this.postView;
-
     return (
       <div className="small mb-1 mb-md-0">
         <PersonListing person={pv.creator} />
@@ -444,6 +441,13 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
                 lang => lang.id === pv.post.language_id,
               )?.name
             }
+          </span>
+        )}{" "}
+        {pv.post.scheduled_publish_time && (
+          <span className="mx-1 badge text-bg-light">
+            {I18NextService.i18n.t("publish_in_time", {
+              time: formatPastDate(pv.post.scheduled_publish_time),
+            })}
           </span>
         )}{" "}
         · <MomentTime published={pv.post.published} updated={pv.post.updated} />
@@ -653,7 +657,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
         </Link>
         <a
           className="btn btn-sm btn-link btn-animate text-muted py-0"
-          title={I18NextService.i18n.t("link")}
+          title={I18NextService.i18n.t("fedilink")}
           href={ap_id}
         >
           <Icon icon="fedilink" inline />
@@ -780,6 +784,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
         type="button"
         className="btn btn-sm btn-link link-dark link-opacity-75 link-opacity-100-hover py-0 align-baseline"
         onClick={linkEvent(this, this.handleShowBody)}
+        aria-pressed={!this.state.showBody ? "false" : "true"}
       >
         <Icon
           icon={!this.state.showBody ? "plus-square" : "minus-square"}
@@ -1022,7 +1027,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   handleModBanFromCommunity({
     daysUntilExpires,
     reason,
-    shouldRemove,
+    shouldRemoveOrRestoreData,
   }: BanUpdateForm) {
     const {
       creator: { id: person_id },
@@ -1033,7 +1038,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
     // If its an unban, restore all their data
     if (ban === false) {
-      shouldRemove = false;
+      shouldRemoveOrRestoreData = true;
     }
     const expires = futureDaysToUnixTime(daysUntilExpires);
 
@@ -1041,7 +1046,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
       community_id,
       person_id,
       ban,
-      remove_data: shouldRemove,
+      remove_or_restore_data: shouldRemoveOrRestoreData,
       reason,
       expires,
     });
@@ -1050,7 +1055,7 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
   handleModBanFromSite({
     daysUntilExpires,
     reason,
-    shouldRemove,
+    shouldRemoveOrRestoreData,
   }: BanUpdateForm) {
     const {
       creator: { id: person_id, banned },
@@ -1059,14 +1064,14 @@ export class PostListing extends Component<PostListingProps, PostListingState> {
 
     // If its an unban, restore all their data
     if (ban === false) {
-      shouldRemove = false;
+      shouldRemoveOrRestoreData = true;
     }
     const expires = futureDaysToUnixTime(daysUntilExpires);
 
     return this.props.onBanPerson({
       person_id,
       ban,
-      remove_data: shouldRemove,
+      remove_or_restore_data: shouldRemoveOrRestoreData,
       reason,
       expires,
     });
