@@ -66,7 +66,10 @@ export default async (req: Request, res: Response) => {
     let errorPageData: ErrorPageData | undefined = undefined;
     let try_site = await client.getSite();
 
-    if (try_site.state === "failed" && try_site.err.name === "not_logged_in") {
+    if (
+      try_site.state === "failed" &&
+      try_site.err.message === "not_logged_in"
+    ) {
       console.error(
         "Incorrect JWT token, skipping auth so frontend can remove jwt cookie",
       );
@@ -75,7 +78,8 @@ export default async (req: Request, res: Response) => {
     }
 
     if (!auth && isAuthPath(path)) {
-      return res.redirect(`/login${getQueryString({ prev: url })}`);
+      res.redirect(`/login${getQueryString({ prev: url })}`);
+      return;
     }
 
     if (try_site.state === "success") {
@@ -84,7 +88,8 @@ export default async (req: Request, res: Response) => {
       LanguageService.updateLanguages(languages);
 
       if (path !== "/setup" && !site.site_view.local_site.site_setup) {
-        return res.redirect("/setup");
+        res.redirect("/setup");
+        return;
       }
 
       if (site && activeRoute?.fetchInitialData && match) {
@@ -115,22 +120,25 @@ export default async (req: Request, res: Response) => {
       }
     } else if (try_site.state === "failed") {
       res.status(500);
-      errorPageData = getErrorPageData(new Error(try_site.err.name), site);
+      errorPageData = getErrorPageData(new Error(try_site.err.message), site);
     }
 
     const error = Object.values(routeData).find(
-      res => res.state === "failed" && res.err.name !== "couldnt_find_object", // TODO: find a better way of handling errors
+      res =>
+        res.state === "failed" && res.err.message !== "couldnt_find_object", // TODO: find a better way of handling errors
     ) as FailedRequestState | undefined;
 
     // Redirect to the 404 if there's an API error
     if (error) {
       console.error(error.err);
 
-      if (error.err.name === "instance_is_private") {
-        return res.redirect(`/signup`);
+      if (error.err.message === "instance_is_private") {
+        res.redirect(`/signup`);
+        return;
       } else {
         res.status(500);
-        errorPageData = getErrorPageData(new Error(error.err.name), site);
+        errorPageData = getErrorPageData(new Error(error.err.message), site);
+        return;
       }
     }
 
@@ -170,8 +178,8 @@ export default async (req: Request, res: Response) => {
     console.error(err);
     res.statusCode = 500;
 
-    return res.send(
-      process.env.NODE_ENV === "development" ? err.name : "Server error",
+    res.send(
+      process.env.NODE_ENV === "development" ? err.message : "Server error",
     );
   }
 };

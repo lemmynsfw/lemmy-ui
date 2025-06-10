@@ -259,8 +259,8 @@ function handleImageUpload(i: PostForm, event: any) {
         toast(JSON.stringify(res), "danger");
       }
     } else if (res.state === "failed") {
-      console.error(res.err.name);
-      toast(res.err.name, "danger");
+      console.error(res.err.message);
+      toast(res.err.message, "danger");
       i.setState({ imageLoading: false });
     }
   });
@@ -295,7 +295,7 @@ export class PostForm extends Component<PostFormProps, PostFormState> {
   state: PostFormState = {
     suggestedPostsRes: EMPTY_REQUEST,
     metadataRes: EMPTY_REQUEST,
-    form: {},
+    form: { nsfw: true },
     imageLoading: false,
     imageDeleteUrl: "",
     communitySearchLoading: false,

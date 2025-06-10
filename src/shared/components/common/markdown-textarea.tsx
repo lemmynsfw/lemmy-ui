@@ -498,8 +498,8 @@ export class MarkdownTextArea extends Component<
       }
     } else if (res.state === "failed") {
       i.setState({ imageUploadStatus: undefined });
-      console.error(res.err.name);
-      toast(res.err.name, "danger");
+      console.error(res.err.message);
+      toast(res.err.message, "danger");
 
       throw res.err;
     }
